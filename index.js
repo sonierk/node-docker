@@ -1,8 +1,22 @@
 const express = require('express')
 const mongoose = require('mongoose');
+const cors = require('cors')
 const { MONGO_USER, MONGO_PASSWORD, MONGO_IP, MONGO_PORT, REDIS_URL, REDIS_PORT, SESSION_SECRET } = require('./config/config');
 const port = process.env.PORT || 3000
 const app = express()
+
+const connectWithRetry = ()=> {
+  mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`)
+  .then(() => console.log('Connected to DB!'))
+  .catch((e)=>{
+    console.log(e)
+    setTimeout(connectWithRetry,5000)
+  });
+}
+connectWithRetry()
+
+app.enable('trust proxy')
+app.use(cors({}))
 
 const session = require('express-session')
 let RedisStore = require('connect-redis').default
@@ -39,18 +53,11 @@ app.use(session({
 
 app.use(express.json())
 
-const connectWithRetry = ()=> {
-  mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`)
-  .then(() => console.log('Connected to DB!'))
-  .catch((e)=>{
-    console.log(e)
-    setTimeout(connectWithRetry,5000)
-  });
-}
-connectWithRetry()
+
 
 app.get('/api/v1', (req, res)=>{
     res.send('<h2>Hi !!!</h2>')
+    console.log('Yeah it ran');
 })
 //localhost:3000/api/v1/posts
 app.use('/api/v1/posts', require('./routes/postRoutes'))
