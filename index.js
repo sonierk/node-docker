@@ -49,7 +49,7 @@ const connectWithRetry = ()=> {
 }
 connectWithRetry()
 
-app.get('/', (req, res)=>{
+app.get('/api/v1', (req, res)=>{
     res.send('<h2>Hi !!!</h2>')
 })
 //localhost:3000/api/v1/posts
