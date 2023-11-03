@@ -33,7 +33,7 @@ app.use(session({
     httpOnly: true,
     resave: false,
     saveUninitialized: true,
-    maxAge: 30000,
+    maxAge: 120000,
   }
 }))
 
@@ -57,6 +57,3 @@ app.use('/api/v1/posts', require('./routes/postRoutes'))
 app.use('/api/v1/users', require('./routes/userRoutes'))
 
 app.listen(port, ()=>console.log(`listening on port ${port}`))
-
-
-
