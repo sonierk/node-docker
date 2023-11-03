@@ -24,6 +24,7 @@ app.get('/', (req, res)=>{
 })
 //localhost:3000/api/v1/posts
 app.use('/api/v1/posts', require('./routes/postRoutes'))
+app.use('/api/v1/users', require('./routes/userRoutes'))
 
 app.listen(port, ()=>console.log(`listening on port ${port}`))
 
